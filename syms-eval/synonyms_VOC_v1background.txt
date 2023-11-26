@@ -1,0 +1,21 @@
+{'aeroplane','aircraft','jet','plane','airplane','planes','aeroplanes'}
+{'bicycle', 'bicycles'}
+{'bird','birds'}
+{'boat','ship','yacht','boats,'ships'}
+{'bottle','bottles'}
+{'bus','buses'}
+{'car','cars','jeep'}
+{'cat','kitty','cats'}
+{'chair','chairs'}
+{'cow','cows'}
+{'diningtable','dining table','dinner table','diningtables'}
+{'dog','puppy','doggy','dogs'}
+{'horse','horses'}
+{'motorbike','motor bike','motorcycle','motorbikes','motorcycles'}
+{'person','human','people','man','woman','passenger','kid','guy','men','women','driver','rider','player','humans','persons','trainer'}
+{'pottedplant','potted plant','plant','bonsai','pottedplants'}
+{'sheep','sheeps'}
+{'sofa','couch','sofas'}
+{'train','locomotive','trains'}
+{'tvmonitor','tv','monitor','television', 'computer screen','tvmonitors', 'computer screens','televisions' }
+{'background','trees'}

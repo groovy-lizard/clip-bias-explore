@@ -1,0 +1,54 @@
+Baseline: ViT-B/16
+Dataset:VOC2007_test
+
+Results with original CLIP
+
+mAP: 7.26
+
+Per class AP values
+{'aeroplane'}: 3.82
+{'bicycle'}: 5.03
+{'bird'}: 5.41
+{'boat'}: 3.39
+{'bottle'}: 4.37
+{'bus'}: 3.46
+{'car'}: 13.90
+{'cat'}: 6.65
+{'chair'}: 9.42
+{'cow'}: 2.59
+{'diningtable'}: 4.43
+{'dog'}: 8.54
+{'horse'}: 5.22
+{'motorbike'}: 5.47
+{'person'}: 41.80
+{'pottedplant'}: 4.24
+{'sheep'}: 2.45
+{'sofa',}: 4.15
+{'train'}: 5.88
+{'tvmonitor'}: 5.02
+
+Results with synonym-CLIP
+
+mAP: 7.17
+
+Per class AP values
+{'aeroplane'}: 3.80
+{'bicycle'}: 5.07
+{'bird'}: 5.16
+{'boat'}: 3.36
+{'bottle'}: 4.34
+{'bus'}: 3.54
+{'car'}: 14.04
+{'cat'}: 6.52
+{'chair'}: 8.71
+{'cow'}: 2.56
+{'diningtable'}: 4.31
+{'dog'}: 8.66
+{'horse'}: 5.34
+{'motorbike'}: 5.10
+{'person'}: 41.59
+{'pottedplant'}: 4.24
+{'sheep'}: 2.12
+{'sofa',}: 4.10
+{'train'}: 5.89
+{'tvmonitor'}: 4.93
