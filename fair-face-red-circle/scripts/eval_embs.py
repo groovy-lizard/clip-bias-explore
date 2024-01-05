@@ -8,7 +8,7 @@ import pandas as pd
 class Evaluator:
     """
     Embeddings evaluator, the constructor receives the chosen CLIP model,
-    a list of target class labels, and the paths to embeddings 
+    a list of target class labels, and the paths to embeddings
     + core dataset .csv files
     """
 
