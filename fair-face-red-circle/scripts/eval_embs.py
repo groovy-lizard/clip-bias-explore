@@ -98,9 +98,9 @@ class Evaluator:
 if __name__ == "__main__":
     races = ['White', 'Latino_Hispanic', 'Indian', 'East Asian',
              'Black', 'Southeast Asian', 'Middle Eastern']
-    MAN_EMBS_PATH = './man_embeddings.csv'
-    WOMAN_EMBS_PATH = './woman_embeddings.csv'
-    FFACE_PATH = './fface-train.csv'
+    MAN_EMBS_PATH = '../data/man_embeddings.csv'
+    WOMAN_EMBS_PATH = '../data/woman_embeddings.csv'
+    FFACE_PATH = '../data/fface_gender_preds.csv'
 
     # class should'nt have to handle paths and whatnot
     evaluator = Evaluator("RN50", races, MAN_EMBS_PATH, FFACE_PATH)
