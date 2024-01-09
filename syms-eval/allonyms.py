@@ -62,9 +62,9 @@ class Allonyms:
 
     def parse_string(self):
         self.to_string += "{"
-        self.to_string += f"'{self.word}',"
+        self.to_string += f"'{self.word}',\n"
         for name in self.allonyms:
-            self.to_string += f"'{name}',"
+            self.to_string += f"'{name}',\n"
         self.to_string += "}\n"
         return self.to_string
 
