@@ -13,8 +13,10 @@ class SynmsEval:
     """
 
     def __init__(self, model):
+        print(f'Loading model {model}...')
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model, _ = clip.load(model, device=self.device, jit=False)
+        print(f'Done! Model loaded into {self.device}')
 
     def get_similarities(self, img_embs, classes):
         """Grab similarity between classes and image embeddings."""
@@ -72,6 +74,8 @@ if __name__ == "__main__":
     MODEL_NAME = "RN50"
     WOMAN_EMBS_PATH = "../data/woman_embeddings.csv"
     MAN_EMBS_PATH = "../data/man_embeddings.csv"
+    FFACE_PATH = "../data/fface-train.csv"
+
     woman_labels = ['girl', 'lady', 'woman', 'young_woman', 'matriarch',
                     'female_person', 'female', 'girlfriend', 'wife',
                     'adult_female', 'young_lady', 'broad', 'madam',
@@ -84,23 +88,50 @@ if __name__ == "__main__":
     sym_eval = SynmsEval(MODEL_NAME)
     woman_embs_df = pd.read_pickle(WOMAN_EMBS_PATH)
     man_embs_df = pd.read_pickle(MAN_EMBS_PATH)
-    res = {}
+    fface_df = pd.read_csv(FFACE_PATH)
 
+    woman_res = {}
     for _, emb in woman_embs_df.iterrows():
         name = emb['file']
         print(name)
-        image_features = emb['embeddings']
+        img_features = emb['embeddings']
 
-        woman_sims = sym_eval.get_similarities(image_features, woman_labels)
-        woman_win = sym_eval.get_synms_winner(woman_sims)
+        woman_sims = sym_eval.get_similarities(img_features, woman_labels)
+        woman_win = woman_labels[sym_eval.get_synms_winner(woman_sims)]
 
-        man_sims = sym_eval.get_similarities(image_features, man_labels)
-        man_win = sym_eval.get_synms_winner(man_sims)
+        man_sims = sym_eval.get_similarities(img_features, man_labels)
+        man_win = man_labels[sym_eval.get_synms_winner(man_sims)]
 
         preds = sym_eval.run_clip_classifier(
-            image_features, [woman_win, man_win])
+            img_features, [woman_win, man_win])
 
-        res[name] = preds
+        woman_res[name] = preds
 
-    res_df = sym_eval.process_results(res)
-    print(res_df.head())
+    man_res = {}
+    for _, emb in man_embs_df.iterrows():
+        name = emb['file']
+        print(name)
+        img_features = emb['embeddings']
+
+        woman_sims = sym_eval.get_similarities(img_features, woman_labels)
+        woman_win = woman_labels[sym_eval.get_synms_winner(woman_sims)]
+
+        man_sims = sym_eval.get_similarities(img_features, man_labels)
+        man_win = man_labels[sym_eval.get_synms_winner(man_sims)]
+
+        preds = sym_eval.run_clip_classifier(
+            img_features, [woman_win, man_win])
+
+        man_res[name] = preds
+
+    joint_res = {}
+    joint_res.update(woman_res)
+    joint_res.update(man_res)
+
+    final_score_df = sym_eval.process_results(joint_res)
+    final_df = fface_df.set_index('file').join(
+        final_score_df.set_index('file'))
+
+    final_df.rename(
+        columns={'predictions': 'synms_gender_preds'}, inplace=True)
+    final_df.to_csv('../data/synms_gender_fface.csv')
