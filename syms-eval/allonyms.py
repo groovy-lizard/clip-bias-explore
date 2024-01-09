@@ -86,7 +86,7 @@ if __name__ == "__main__":
         description="Retrieve all kinds of 'nyms' of a given word"
     )
     parser.add_argument('word')
-    parser.add_argument('-f', '--file', default='allonyms.txt')
+    parser.add_argument('-f', '--file', default='race-allonyms.txt')
     args = parser.parse_args()
     allo = Allonyms(args.word)
     allo.all_to_file(args.file)

@@ -26,6 +26,7 @@ class SynmsEval:
             [clip.tokenize(f"a photo of a {c}") for c in classes]
         ).to(self.device)
 
+        # !gargalo
         with torch.no_grad():
             text_features = self.model.encode_text(text_inputs)
 
