@@ -1,7 +1,8 @@
+"""Embeddings generator using CLIP image or text feature extractor"""
+import json
 import clip
 import torch
 import pandas as pd
-import numpy as np
 from PIL import Image
 
 
@@ -25,7 +26,7 @@ def model_setup(model):
     return model, preprocess
 
 
-def generate_embeddings_dataframe(df, model, preprocess, device, path):
+def generate_image_embeddings_dataframe(df, model, preprocess, device, path):
     """Generate image embeddings using CLIP model"""
     files = []
     embs = []
@@ -46,3 +47,16 @@ def generate_embeddings_dataframe(df, model, preprocess, device, path):
 
     df_out = pd.DataFrame(data=d)
     return df_out
+
+
+def generate_text_embeddings(txts, model, device):
+    """Generate text embeddings using CLIP model"""
+    text_inputs = torch.cat(
+        [clip.tokenize(f"a photo of a {c}") for c in txts]).to(device)
+
+    with torch.no_grad():
+        text_features = model.encode_text(text_inputs)
+
+    text_features /= text_features.norm(dim=-1, keepdim=True)
+
+    return text_features

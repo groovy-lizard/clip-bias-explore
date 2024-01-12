@@ -1,5 +1,6 @@
 """This module aims to evaluate different label synonyms
 and choose the best one, in order to compete agains another target label"""
+import json
 import torch
 import clip
 import numpy as np
@@ -18,21 +19,11 @@ class SynmsEval:
         self.model, _ = clip.load(model, device=self.device, jit=False)
         print(f'Done! Model loaded into {self.device}')
 
-    def get_similarities(self, img_embs, classes):
-        """Grab similarity between classes and image embeddings."""
+    def get_similarities(self, img_embs, txt_embs):
+        """Grab similarity between text and image embeddings."""
         image_features = torch.from_numpy(img_embs).to(self.device)
+        similarity = 100.0 * image_features @ txt_embs.T
 
-        text_inputs = torch.cat(
-            [clip.tokenize(f"a photo of a {c}") for c in classes]
-        ).to(self.device)
-
-        # !gargalo
-        with torch.no_grad():
-            text_features = self.model.encode_text(text_inputs)
-
-        text_features /= text_features.norm(dim=-1, keepdim=True)
-
-        similarity = 100.0 * image_features @ text_features.T
         return similarity
 
     def get_synms_winner(self, sims):
@@ -42,15 +33,15 @@ class SynmsEval:
         np_loc = np.where(np_sims[0] == np_sims.max())
         return np_loc[0][0]
 
-    def run_clip_classifier(self, img_emb, classes):
-        """Run classes by CLIP to choose the closest one"""
-        sims = self.get_similarities(img_emb, classes)
+    def run_clip_classifier(self, img_emb, txt_embs):
+        """Run txt_embs by CLIP to choose the closest one"""
+        sims = self.get_similarities(img_emb, txt_embs)
         sims_max = sims.softmax(dim=-1)
         values, indices = sims_max[0].topk(len(sims_max[0]))
         scores = []
         for value, index in zip(values, indices):
             scores.append(
-                (classes[index], round(100 * value.item(), 2)))
+                (txt_embs[index], round(100 * value.item(), 2)))
         return scores
 
     def process_results(self, results):
@@ -62,7 +53,7 @@ class SynmsEval:
 
         for key, value in results.items():
             files.append(key)
-            predicts.append(value[0][0])
+            predicts.append(value)
 
         score_dict['file'] = files
         score_dict['predictions'] = predicts
@@ -73,56 +64,47 @@ class SynmsEval:
 
 if __name__ == "__main__":
     MODEL_NAME = "RN50"
-    WOMAN_EMBS_PATH = "../data/woman_embeddings.csv"
-    MAN_EMBS_PATH = "../data/man_embeddings.csv"
-    FFACE_PATH = "../data/fface-train.csv"
-
-    woman_labels = ['girl', 'lady', 'woman', 'young_woman', 'matriarch',
-                    'female_person', 'female', 'girlfriend', 'wife',
-                    'adult_female', 'young_lady', 'broad', 'madam',
-                    'lady_friend']
-
-    man_labels = ['boy', 'gentleman', 'man', 'dude', 'patriarch', 'husband',
-                  'sir', 'guy', 'male_person', 'adult_male', 'male',
-                  'young_man', 'boyfriend']
+    ROOT = "/home/lazye/Documents/ufrgs/mcs/clip/bias-explore/fair-face-red-circle"
+    WOMAN_EMBS_PATH = ROOT+"/data/woman_embeddings.csv"
+    MAN_EMBS_PATH = ROOT+"/data/man_embeddings.csv"
+    FFACE_PATH = ROOT+"/data/fface_train.csv"
+    GENDER_JSON = ROOT+"/data/gender-synms.json"
 
     sym_eval = SynmsEval(MODEL_NAME)
-    woman_embs_df = pd.read_pickle(WOMAN_EMBS_PATH)
-    man_embs_df = pd.read_pickle(MAN_EMBS_PATH)
+
+    woman_img_embs = pd.read_pickle(WOMAN_EMBS_PATH)
+    man_img_embs = pd.read_pickle(MAN_EMBS_PATH)
+
+    woman_txt_embs = torch.load(ROOT+'/data/woman-synms-embs.pt')
+    man_txt_embs = torch.load(ROOT+'/data/man-synms-embs.pt')
+
+    gender_txt_embs = torch.load(ROOT+'/data/gender-synms-embs.pt')
+
+    with open(GENDER_JSON, encoding='utf-8') as json_data:
+        gender_classes = json.load(json_data)['synms']
+
     fface_df = pd.read_csv(FFACE_PATH)
 
     woman_res = {}
-    for _, emb in woman_embs_df.iterrows():
+    for _, emb in woman_img_embs.iterrows():
         name = emb['file']
         print(name)
         img_features = emb['embeddings']
 
-        woman_sims = sym_eval.get_similarities(img_features, woman_labels)
-        woman_win = woman_labels[sym_eval.get_synms_winner(woman_sims)]
-
-        man_sims = sym_eval.get_similarities(img_features, man_labels)
-        man_win = man_labels[sym_eval.get_synms_winner(man_sims)]
-
-        preds = sym_eval.run_clip_classifier(
-            img_features, [woman_win, man_win])
-
+        sims = sym_eval.get_similarities(img_features, gender_txt_embs)
+        preds = gender_classes[sym_eval.get_synms_winner(sims)]
+        print(preds)
         woman_res[name] = preds
 
     man_res = {}
-    for _, emb in man_embs_df.iterrows():
+    for _, emb in man_img_embs.iterrows():
         name = emb['file']
         print(name)
         img_features = emb['embeddings']
 
-        woman_sims = sym_eval.get_similarities(img_features, woman_labels)
-        woman_win = woman_labels[sym_eval.get_synms_winner(woman_sims)]
-
-        man_sims = sym_eval.get_similarities(img_features, man_labels)
-        man_win = man_labels[sym_eval.get_synms_winner(man_sims)]
-
-        preds = sym_eval.run_clip_classifier(
-            img_features, [woman_win, man_win])
-
+        sims = sym_eval.get_similarities(img_features, gender_txt_embs)
+        preds = gender_classes[sym_eval.get_synms_winner(sims)]
+        print(preds)
         man_res[name] = preds
 
     joint_res = {}
@@ -135,4 +117,4 @@ if __name__ == "__main__":
 
     final_df.rename(
         columns={'predictions': 'synms_gender_preds'}, inplace=True)
-    final_df.to_csv('../data/synms_gender_fface.csv')
+    final_df.to_csv(ROOT+'/data/full_synms_gender_fface.csv')

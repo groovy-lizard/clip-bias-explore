@@ -62,9 +62,10 @@ class Allonyms:
 
     def parse_string(self):
         self.to_string += "{"
-        self.to_string += f"'{self.word}',\n"
+        self.to_string += f'"{self.word}_synms": [\n'
         for name in self.allonyms:
-            self.to_string += f"'{name}',\n"
+            self.to_string += f'"{name}",\n'
+        self.to_string += "]\n"
         self.to_string += "}\n"
         return self.to_string
 
@@ -86,7 +87,7 @@ if __name__ == "__main__":
         description="Retrieve all kinds of 'nyms' of a given word"
     )
     parser.add_argument('word')
-    parser.add_argument('-f', '--file', default='race-allonyms.txt')
+    parser.add_argument('-f', '--file', default='allonyms.json')
     args = parser.parse_args()
     allo = Allonyms(args.word)
     allo.all_to_file(args.file)
