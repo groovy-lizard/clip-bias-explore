@@ -4,34 +4,35 @@ import clip
 import torch
 import pandas as pd
 from PIL import Image
+from tqdm import tqdm
 
 
 def model_setup(model):
-    """Initial loading of CLIP model.
-    list of available models: 'RN50', 'RN101', 'RN50x4', 'RN50x16'"""
-    available_models = ['RN50', 'RN101', 'RN50x4', 'RN50x16']
+    """Initial loading of CLIP model."""
+
+    available_models = clip.available_models()
 
     if model in available_models:
         print(f'Loading model: {model}')
-        clip_model = model
+        chosen_model = model
     else:
-        print(f'{model} unavailable! Falling back to default model: RN50')
-        clip_model = available_models[0]
+        print(f'{model} unavailable! Using default model: ViT-L/14@336px')
+        chosen_model = available_models[0]
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    model, preprocess = clip.load(clip_model, device=device, jit=False)
+    model, pps = clip.load(chosen_model, device=device, jit=False)
 
     print(f'Done! Model loaded to {device} device')
-    return model, preprocess
+    return model, pps
 
 
-def generate_image_embeddings_dataframe(df, model, preprocess, device, path):
+def generate_img_ebs_df(df, model, preprocess, device, path):
     """Generate image embeddings using CLIP model"""
     files = []
     embs = []
 
-    for file in df:
+    for file in tqdm(df):
         img_path = path + file
         img = Image.open(img_path)
         img_input = preprocess(img).unsqueeze(0).to(device)
@@ -49,14 +50,26 @@ def generate_image_embeddings_dataframe(df, model, preprocess, device, path):
     return df_out
 
 
-def generate_text_embeddings(txts, model, device):
+def generate_txt_embs(txts, model, device):
     """Generate text embeddings using CLIP model"""
     text_inputs = torch.cat(
-        [clip.tokenize(f"a photo of a {c}") for c in txts]).to(device)
+        [clip.tokenize(c) for c in txts]).to(device)
 
     with torch.no_grad():
         text_features = model.encode_text(text_inputs)
-
-    text_features /= text_features.norm(dim=-1, keepdim=True)
+        text_features /= text_features.norm(dim=-1, keepdim=True)
 
     return text_features
+
+
+if __name__ == "__main__":
+    fface_df = pd.read_csv("../data/fface_val.csv")
+    clip_model, preprocessor = model_setup('ViT-L/14@336px')
+    VAL_PATH = '/home/lazye/Documents/ufrgs/mcs/datasets/FairFace/val'
+    f = open('../data/labels.json', encoding='utf-8')
+    labels = json.load(f)
+    f.close()
+    txt_embs = generate_txt_embs(list(labels.values), clip_model, 'cuda')
+    torch.save(txt_embs, '../data/original-gender-race-labels.pt')
+    # img_embs_df = generate_img_ebs_df(
+    #     fface_df['file'], clip_model, preprocessor, 'cuda', VAL_PATH)
