@@ -1,8 +1,10 @@
 # syntax=docker/dockerfile:1
-FROM pytorch/pytorch:2.1.2-cuda11.8-cudnn8-runtime
+FROM nvidia/cuda:11.8.0-base-ubuntu22.04
 
+# remove any third-party apt sources to avoid issues with expiring keys
 RUN rm -f /etc/apt/sources.list.d/*.list
 
+# install base utils
 RUN apt-get update \
     && apt-get install -y build-essential \
     curl \
@@ -21,21 +23,19 @@ RUN apt-get update \
     libgl1-mesa-glx \
     yasm \
     cmake \
-    ffmpeg \
-    nano \
     && rm -rf /var/lib/apt/lists/*
 
-
+# Create a working directory.
 RUN mkdir /app
 WORKDIR /app
 
-#Create a non-root user and switch to it.
+# Create a non-root user and switch to it.
 RUN adduser --disabled-password --gecos '' --shell /bin/bash user \
     && chown -R user:user /app
 RUN echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-user
 USER user
 
-#All users can use /home/user as their home directory.
+# All users can use /home/user as their home directory.
 ENV HOME=/home/user
 RUN mkdir $HOME/.cache $HOME/.config \
     && chmod -R 777 $HOME
@@ -49,7 +49,7 @@ ENV MAMBA_EXE=/usr/local/bin/micromamba \
     CONDA_PREFIX=/home/user/micromamba \
     PATH=/home/user/micromamba/bin:$PATH
 
-# set up the base conda env by installing pytorch and friends.
+# set up the base conda env by installing clip and friends.
 COPY environment.yml /app/environment.yml
 
 RUN micromamba create -qy -n base -f /app/environment.yml \
@@ -57,4 +57,4 @@ RUN micromamba create -qy -n base -f /app/environment.yml \
     && micromamba shell init --shell=bash --prefix="$MAMBA_ROOT_PREFIX" \
     && micromamba clean -qya
 
-CMD [ "/bin/bash" ]
+CMD ["/bin/bash"]
