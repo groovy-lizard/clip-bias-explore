@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM nvidia/cuda:11.8.0-base-ubuntu22.04
+FROM pytorch/pytorch:2.1.2-cuda11.8-cudnn8-runtime
 
 RUN rm -f /etc/apt/sources.list.d/*.list
 
