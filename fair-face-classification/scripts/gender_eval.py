@@ -64,7 +64,8 @@ class SynmsEval:
 
 if __name__ == "__main__":
     MODEL_NAME = "ViT-B/16"
-    ROOT = "/home/lazye/Documents/ufrgs/mcs/clip/bias-explore/fair-face-classification"
+    ROOT = "/home/lazye/Documents/ufrgs/mcs/" + \
+        "clip/bias-explore/fair-face-classification"
     IMG_EMBS_PATH = ROOT+"/data/fface_val_img_embs.pkl"
     FFACE_PATH = ROOT+"/data/fface_val.csv"
     LABELS_JSON = ROOT+"/data/raw_gender_labels.json"
