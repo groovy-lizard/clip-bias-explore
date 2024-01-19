@@ -1,5 +1,4 @@
 """Embeddings generator using CLIP image or text feature extractor"""
-import json
 import clip
 import torch
 import pandas as pd
@@ -64,12 +63,14 @@ def generate_txt_embs(txts, model, device):
 
 if __name__ == "__main__":
     fface_df = pd.read_csv("../data/fface_val.csv")
-    clip_model, preprocessor = model_setup('ViT-L/14@336px')
-    VAL_PATH = '/home/lazye/Documents/ufrgs/mcs/datasets/FairFace/val'
-    f = open('../data/labels.json', encoding='utf-8')
-    labels = json.load(f)
-    f.close()
-    txt_embs = generate_txt_embs(list(labels.values), clip_model, 'cuda')
-    torch.save(txt_embs, '../data/original-gender-race-labels.pt')
-    # img_embs_df = generate_img_ebs_df(
-    #     fface_df['file'], clip_model, preprocessor, 'cuda', VAL_PATH)
+    clip_model, preprocessor = model_setup('ViT-B/16')
+    VAL_PATH = '/home/lazye/Documents/ufrgs/mcs/datasets/FairFace/'
+    # f = open('../data/labels.json', encoding='utf-8')
+    # labels = json.load(f)
+    # f.close()
+    # labels = list(labels.values())
+    # txt_embs = generate_txt_embs(labels, clip_model, 'cuda')
+    # torch.save(txt_embs, '../data/original-gender-race-labels.pt')
+    img_embs_df = generate_img_ebs_df(
+        fface_df['file'], clip_model, preprocessor, 'cuda', VAL_PATH)
+    img_embs_df.to_pickle('../data/fface_val_img_embs.pkl')
