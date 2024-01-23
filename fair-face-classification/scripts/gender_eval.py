@@ -5,7 +5,7 @@ import torch
 import clip
 import numpy as np
 import pandas as pd
-from pdb import set_trace as pause
+
 
 class SynmsEval:
     """Synonym evaluator
