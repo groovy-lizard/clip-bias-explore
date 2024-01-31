@@ -1,46 +1,27 @@
 {
   "Male": [
-    "gentleman",
     "young man",
     "adult male",
-    "male person",
-    "old man",
-    "patriarch",
     "male",
     "man",
-    "sir",
-    "dude",
     "guy",
     "boy",
-    "young boy",
     "middle-aged man",
-    "brother",
-    "father",
+    "old man",
     "grandfather",
-    "grandpa",
-    "geezer",
-    "old geezer"
+    "grandpa"
   ],
 
   "Female": [
-    "girl",
-    "missy",
-    "fancy woman",
-    "old woman",
     "young woman",
-    "woman",
-    "female person",
-    "lady",
-    "young lady",
     "adult female",
-    "madam",
-    "matriarch",
-    "miss",
     "female",
-    "sister",
-    "mother",
+    "woman",
+    "lady",
+    "girl",
+    "madam",
+    "old woman",
     "grandmother",
-    "grandma",
-    "granny"
+    "grandma"
   ]
 }

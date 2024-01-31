@@ -66,12 +66,12 @@ if __name__ == "__main__":
     fface_df = pd.read_csv("../data/fface_val.csv")
     clip_model, preprocessor = model_setup('ViT-B/16')
     VAL_PATH = '/home/lazye/Documents/ufrgs/mcs/datasets/FairFace/'
-    f = open('../data/raw_gender_labels.json', encoding='utf-8')
+    f = open('../data/synms_gender_labels.json', encoding='utf-8')
     labels = json.load(f)
     f.close()
     labels = list(labels.values())
     txt_embs = generate_txt_embs(labels, clip_model, 'cuda')
-    torch.save(txt_embs, '../data/raw-gender-labels.pt')
+    torch.save(txt_embs, '../data/synms-gender-labels.pt')
     # img_embs_df = generate_img_ebs_df(
     #     fface_df['file'], clip_model, preprocessor, 'cuda', VAL_PATH)
     # img_embs_df.to_pickle('../data/fface_val_img_embs.pkl')

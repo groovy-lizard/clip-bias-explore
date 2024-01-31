@@ -26,11 +26,11 @@ class SynmsEval:
 
         return similarity
 
-    def get_synms_winner(self, sims):
+    def get_synms_winner(self, simis):
         """transform similarity tensor into numpy array,
             then grab the index of the highest element"""
-        np_sims = sims.cpu().numpy()
-        np_loc = np.where(np_sims[0] == np_sims.max())
+        np_simis = simis.cpu().numpy()
+        np_loc = np.where(np_simis[0] == np_simis.max())
         return np_loc[0][0]
 
     def run_clip_classifier(self, img_emb, txts):
@@ -64,22 +64,21 @@ class SynmsEval:
 
 if __name__ == "__main__":
     MODEL_NAME = "ViT-B/16"
-    ROOT = "/home/lazye/Documents/ufrgs/mcs/" + \
-        "clip/bias-explore/fair-face-classification"
-    IMG_EMBS_PATH = ROOT+"/data/fface_val_img_embs.pkl"
-    FFACE_PATH = ROOT+"/data/fface_val.csv"
-    LABELS_JSON = ROOT+"/data/raw_gender_labels.json"
+    IMG_EMBS_PATH = "../data/fface_val_img_embs.pkl"
+    FFACE_PATH = "../data/fface_val.csv"
+    LABELS_JSON = "../data/synms_gender_labels.json"
 
     sym_eval = SynmsEval(MODEL_NAME)
 
     img_embs = pd.read_pickle(IMG_EMBS_PATH)
 
-    txt_embs = torch.load(ROOT+'/data/raw-gender-labels.pt')
+    txt_embs = torch.load('../data/synms-gender-labels.pt')
 
     with open(LABELS_JSON, encoding='utf-8') as json_data:
         data = json.load(json_data)
         fface_classes = list(data.keys())
-        fface_prompts = list(data.values())
+        prompts = list(data.values())
+        fface_prompts = prompts[0] + prompts[1]
 
     fface_df = pd.read_csv(FFACE_PATH)
 
@@ -90,7 +89,7 @@ if __name__ == "__main__":
         img_features = emb['embeddings']
 
         sims = sym_eval.get_similarities(img_features, txt_embs)
-        preds = fface_classes[sym_eval.get_synms_winner(sims)]
+        preds = fface_prompts[sym_eval.get_synms_winner(sims)]
         res[name] = preds
 
     final_score_df = sym_eval.process_results(res)
@@ -99,4 +98,4 @@ if __name__ == "__main__":
 
     final_df.rename(
         columns={'predictions': 'gender_preds'}, inplace=True)
-    final_df.to_csv(ROOT+'/data/raw_gender_preds_fface.csv')
+    final_df.to_csv('../data/synms_gender_preds_fface.csv')
