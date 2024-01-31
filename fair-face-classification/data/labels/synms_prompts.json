@@ -1,0 +1,26 @@
+{
+  "Male": {
+    "Young Man": "a photo of a young man",
+    "Adult Male": "a photo of an adult male",
+    "Male": "a photo of a male person",
+    "Man": "a photo of a man",
+    "Guy": "a photo of a guy",
+    "Boy": "a photo of a boy",
+    "Middle-aged Man": "a photo of a middle-aged man",
+    "Old Man": "a photo of an old man",
+    "Grandfather": "a photo of a grandfather",
+    "Grandpa": "a photo of a grandpa"
+  },
+  "Female": {
+    "Young Woman": "a photo of a young woman",
+    "Adult Female": "a photo of an adult female",
+    "Female": "a photo of a female person",
+    "Woman": "a photo of a woman",
+    "Lady": "a photo of a lady",
+    "Girl": "a photo of a girl",
+    "Madam": "a photo of a madam",
+    "Old Woman": "a photo of an old woman",
+    "Grandmother": "a photo of a grandmother",
+    "Grandma": "a photo of a grandma"
+  }
+}
