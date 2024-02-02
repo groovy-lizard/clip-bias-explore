@@ -1,8 +1,6 @@
 """
-CLIP classifier toolkit.
+CLIP embeddings generator
 Tools include the generation of image and text embeddings,
-classification by top[k] img/txt pair,
-evaluation of accuracy metrics and reports.
 """
 
 import sys
@@ -14,7 +12,7 @@ from PIL import Image
 
 
 class EmbGenerator:
-    """CLIP classifier main class. Instanced without parameters,
+    """Embeddings generator main class. Instanced without parameters,
         but should call model_setup before use"""
 
     def __init__(self):
