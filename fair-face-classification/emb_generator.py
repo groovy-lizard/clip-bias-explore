@@ -5,17 +5,15 @@ classification by top[k] img/txt pair,
 evaluation of accuracy metrics and reports.
 """
 
-import json
-import argparse
+import sys
 import torch
 import clip
 import pandas as pd
-import numpy as np
 from tqdm import tqdm
 from PIL import Image
 
 
-class ClipClassifier:
+class EmbGenerator:
     """CLIP classifier main class. Instanced without parameters,
         but should call model_setup before use"""
 
@@ -38,7 +36,7 @@ class ClipClassifier:
         else:
             print(
                 f'{model_name} unavailable!')
-            exit(-1)
+            sys.exit(-1)
 
         self.model, self.pps = clip.load(
             chosen_model, device=self.device, jit=False)
