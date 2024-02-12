@@ -11,10 +11,10 @@ EMBS_PATH = ROOT + "/data/embeddings"
 embedder = EmbGenerator()
 embedder.model_setup("ViT-B/16")
 
-with open(JSON_PATH+"/bots_synms_prompts.json", encoding="utf-8") as f:
+with open(JSON_PATH+"/caption_rad.json", encoding="utf-8") as f:
     data = json.load(f)
 
 prompts = list(data.values())
 labels = list(data.keys())
 txt_fts = embedder.generate_text_embeddings(prompts)
-torch.save(txt_fts, EMBS_PATH+"/synms_labels.pt")
+torch.save(txt_fts, EMBS_PATH+"/age_race_gender.pt")

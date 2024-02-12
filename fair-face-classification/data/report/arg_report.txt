@@ -1,0 +1,94 @@
+# Original Paper Predictions info:
+
+--------------------
+
+## General Accuracy
+Prediction error count: 534
+Prediction accuracy score: 0.95
+
+## Accuracy by gender
+Male: 0.96
+Female: 0.94
+
+## Accuracy by race
+East Asian predictions accuracy: 0.95
+White predictions accuracy: 0.96
+Latino_Hispanic predictions accuracy: 0.96
+Southeast Asian predictions accuracy: 0.95
+Black predictions accuracy: 0.91
+Indian predictions accuracy: 0.95
+Middle Eastern predictions accuracy: 0.98
+
+## Accuracy by age
+3-9 predictions accuracy: 0.87
+50-59 predictions accuracy: 0.97
+30-39 predictions accuracy: 0.98
+20-29 predictions accuracy: 0.97
+more than 70 predictions accuracy: 0.95
+40-49 predictions accuracy: 0.98
+10-19 predictions accuracy: 0.91
+60-69 predictions accuracy: 0.96
+0-2 predictions accuracy: 0.83
+
+
+
+# age_race_gender Average Sum Synonym Prediction info:
+--------------------
+## General Accuracy
+Prediction error count: 740 
+Prediction accuracy score: 0.93 
+
+## Accuracy by gender 
+Male: 0.89 
+Female: 0.98 
+
+## Accuracy by race 
+East Asian predictions accuracy: 0.93 
+White predictions accuracy: 0.96 
+Latino_Hispanic predictions accuracy: 0.96 
+Southeast Asian predictions accuracy: 0.91 
+Black predictions accuracy: 0.87 
+Indian predictions accuracy: 0.94 
+Middle Eastern predictions accuracy: 0.97 
+
+## Accuracy by age 
+3-9 predictions accuracy: 0.79 
+50-59 predictions accuracy: 0.97 
+30-39 predictions accuracy: 0.97 
+20-29 predictions accuracy: 0.97 
+more than 70 predictions accuracy: 0.97 
+40-49 predictions accuracy: 0.98 
+10-19 predictions accuracy: 0.88 
+60-69 predictions accuracy: 0.96 
+0-2 predictions accuracy: 0.63 
+--------------------
+# age_race_gender Top 1 Synonym Prediction info:
+--------------------
+## General Accuracy
+Prediction error count: 627 
+Prediction accuracy score: 0.94 
+
+## Accuracy by gender 
+Male: 0.93 
+Female: 0.95 
+
+## Accuracy by race 
+East Asian predictions accuracy: 0.95 
+White predictions accuracy: 0.92 
+Latino_Hispanic predictions accuracy: 0.96 
+Southeast Asian predictions accuracy: 0.95 
+Black predictions accuracy: 0.92 
+Indian predictions accuracy: 0.95 
+Middle Eastern predictions accuracy: 0.96 
+
+## Accuracy by age 
+3-9 predictions accuracy: 0.87 
+50-59 predictions accuracy: 0.95 
+30-39 predictions accuracy: 0.97 
+20-29 predictions accuracy: 0.97 
+more than 70 predictions accuracy: 0.95 
+40-49 predictions accuracy: 0.96 
+10-19 predictions accuracy: 0.91 
+60-69 predictions accuracy: 0.93 
+0-2 predictions accuracy: 0.81 
+--------------------
