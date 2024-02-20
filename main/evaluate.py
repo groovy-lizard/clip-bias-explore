@@ -113,6 +113,7 @@ def map_synm_to_gender(df, man_prompts):
     """Use sub-set of man synms to evaluate and map
     synms to Male or Female"""
     new_df = df.copy()
+    new_df['synm'] = new_df['gender_preds']
     new_df['gender_preds'] = df['gender_preds'].map(
         lambda x: synm_to_gender(x, man_prompts))
     return new_df
@@ -134,14 +135,14 @@ fair-face-classification"
         data = json.load(f)
 
     prompt_list = list(data.values())
-    man_p = prompt_list[:31]
+    man_p = prompt_list[:32]
 
     sims_dict = get_sims_dict(img_embs, prompt_list, txt_embs)
     sum_df = get_sum_synms(sims_dict, man_p)
     final_sum_df = generate_final_df(fface_df, sum_df)
-    save_df(final_sum_df, RESULTS_PATH+"/agr_sum_synms.csv")
+    save_df(final_sum_df, RESULTS_PATH+"/arg_sum_synms.csv")
 
     top_df = get_top_synm(final_dict=sims_dict)
     bin_top_df = map_synm_to_gender(top_df, man_p)
     final_top_df = generate_final_df(fface_df, bin_top_df)
-    save_df(final_top_df, RESULTS_PATH+"/agr_top_synms.csv")
+    save_df(final_top_df, RESULTS_PATH+"/arg_top_synms.csv")
