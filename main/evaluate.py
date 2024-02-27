@@ -46,6 +46,9 @@ def get_sims_dict(im_embs, txt_prompts, t_embs):
         for label, score in zip(txt_prompts, img_sims[0]):
             s_dict[label] = score.cpu().numpy().item()
         final_dict[name] = s_dict
+    # TODO: fix naming convention
+    with open('similarities.json', 'w', encoding='utf-8') as ff:
+        json.dump(obj=final_dict, fp=ff, indent=4)
     return final_dict
 
 
@@ -138,11 +141,11 @@ fair-face-classification"
     man_p = prompt_list[:32]
 
     sims_dict = get_sims_dict(img_embs, prompt_list, txt_embs)
-    sum_df = get_sum_synms(sims_dict, man_p)
-    final_sum_df = generate_final_df(fface_df, sum_df)
-    save_df(final_sum_df, RESULTS_PATH+"/arg_sum_synms.csv")
+    # sum_df = get_sum_synms(sims_dict, man_p)
+    # final_sum_df = generate_final_df(fface_df, sum_df)
+    # save_df(final_sum_df, RESULTS_PATH+"/arg_sum_synms.csv")
 
-    top_df = get_top_synm(final_dict=sims_dict)
-    bin_top_df = map_synm_to_gender(top_df, man_p)
-    final_top_df = generate_final_df(fface_df, bin_top_df)
-    save_df(final_top_df, RESULTS_PATH+"/arg_top_synms.csv")
+    # top_df = get_top_synm(final_dict=sims_dict)
+    # bin_top_df = map_synm_to_gender(top_df, man_p)
+    # final_top_df = generate_final_df(fface_df, bin_top_df)
+    # save_df(final_top_df, RESULTS_PATH+"/arg_top_synms.csv")
