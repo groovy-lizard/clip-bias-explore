@@ -1,0 +1,6 @@
+{
+    "Model": "CLIP",
+    "Backbone": "ViT-L 16",
+    "Label": "Gender",
+    "Flags": "no-baby"
+}
